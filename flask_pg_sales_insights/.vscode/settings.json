@@ -1,0 +1,5 @@
+{
+  "python.analysis.typeCheckingMode": "off",
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "editor.formatOnSave": true
+}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Welcome, {{ user.username }}</h2>
+
+<!-- Date Range Filter -->
+<form method="get" style="margin-bottom:20px;">
+    <label>Start Date: <input type="date" name="start_date" value="{{ start_date }}"></label>
+    <label>End Date: <input type="date" name="end_date" value="{{ end_date }}"></label>
+    <button type="submit">Filter</button>
+    <a href="{{ url_for('user_dashboard') }}">Reset</a>
+</form>
+
+<!-- KPI Cards -->
+<div style="display:flex; gap:20px; margin:20px 0;">
+    <div style="flex:1; border:1px solid #ccc; padding:20px; border-radius:8px;">
+        <h3>Total Customers</h3>
+        <p><b>{{ total_customers }}</b></p>
+    </div>
+    <div style="flex:1; border:1px solid #ccc; padding:20px; border-radius:8px;">
+        <h3>Total Orders</h3>
+        <p><b>{{ total_orders }}</b></p>
+    </div>
+    <div style="flex:1; border:1px solid #ccc; padding:20px; border-radius:8px;">
+        <h3>Total Revenue</h3>
+        <p><b>₹{{ "%.2f"|format(total_revenue) }}</b></p>
+    </div>
+</div>
+
+<!-- Monthly Revenue Chart -->
+<h3>📈 Monthly Revenue</h3>
+<canvas id="revenueChart" width="600" height="300"></canvas>
+
+<!-- Top Customers -->
+<h3>🏆 Top Customers</h3>
+<table border="1" cellpadding="6" style="margin-bottom:20px;">
+    <tr>
+        <th>Rank</th>
+        <th>Customer</th>
+        <th>Revenue</th>
+    </tr>
+    {% for c in top_customers %}
+    <tr>
+        <td>{{ c.rnk }}</td>
+        <td>{{ c.customer_name }}</td>
+        <td>₹{{ "%.2f"|format(c.revenue) }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- Top Products -->
+<h3>🔥 Top Products</h3>
+<table border="1" cellpadding="6" style="margin-bottom:20px;">
+    <tr>
+        <th>Product</th>
+        <th>Quantity Sold</th>
+    </tr>
+    {% for p in top_products %}
+    <tr>
+        <td>{{ p.name }}</td>
+        <td>{{ p.qty }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- Top Categories -->
+<h3>🏷️ Top Categories</h3>
+<table border="1" cellpadding="6">
+    <tr>
+        <th>Category</th>
+        <th>Revenue</th>
+    </tr>
+    {% for c in top_categories %}
+    <tr>
+        <td>{{ c.category_name }}</td>
+        <td>₹{{ "%.2f"|format(c.revenue) }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- Chart.js script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ monthly_revenue| map(attribute = 0) | list | tojson }},
+    datasets: [{
+        label: 'Revenue',
+        data: {{ monthly_revenue| map(attribute = 1) | list | tojson }},
+        borderColor: 'blue',
+        fill: false,
+        tension: 0.2
+            }]
+        },
+    options: { responsive: true, plugins: { legend: { display: true } } }
+    });
+</script>
+
+{% endblock %}

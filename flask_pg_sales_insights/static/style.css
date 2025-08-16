@@ -1,0 +1,4 @@
+body { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+.card-title { font-weight: 700; }
+.table th, .table td { vertical-align: middle; }
+footer { opacity: 0.8; }

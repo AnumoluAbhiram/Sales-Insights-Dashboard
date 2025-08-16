@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📊 Admin Dashboard</h2>
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-bg-primary mb-3">
+            <div class="card-body">
+                <h5>Total Users</h5>
+                <p class="fs-3">{{ total_users }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-success mb-3">
+            <div class="card-body">
+                <h5>Admins</h5>
+                <p class="fs-3">{{ total_admins }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-warning mb-3">
+            <div class="card-body">
+                <h5>Normal Users</h5>
+                <p class="fs-3">{{ total_normal_users }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>🆕 Recently Registered</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in recent_users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

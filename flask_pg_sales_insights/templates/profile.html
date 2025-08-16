@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>👤 User Profile</h2>
+<div class="card p-3">
+    <p><strong>ID:</strong> {{ user.id }}</p>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Admin:</strong> {{ "✅ Yes" if user.is_admin else "❌ No" }}</p>
+    <p><strong>Created At:</strong> {{ user.created_at.strftime('%Y-%m-%d') }}</p>
+    <p><strong>Last Login:</strong> {{ user.last_login.strftime('%Y-%m-%d %H:%M') if user.last_login else "Never" }}</p>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4">Dashboard</h1>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="text-muted small">Total Revenue</div>
+        <div class="display-6 fw-bold">₹{{ '%.2f'|format(total_revenue|float) }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="text-muted small">Total Orders</div>
+        <div class="display-6 fw-bold">{{ total_orders }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <div class="text-muted small">Customers</div>
+        <div class="display-6 fw-bold">{{ total_customers }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-body">
+    <h5 class="card-title">Monthly Revenue</h5>
+    <canvas id="revChart" height="100"></canvas>
+  </div>
+</div>
+
+<div class="card shadow-sm border-0">
+  <div class="card-body">
+    <h5 class="card-title">Top Products</h5>
+    <div class="table-responsive">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th class="text-end">Units Sold</th>
+            <th class="text-end">Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in top_products %}
+          <tr>
+            <td>{{ row.name }}</td>
+            <td>{{ row.category }}</td>
+            <td class="text-end">{{ row.units_sold }}</td>
+            <td class="text-end">₹{{ '%.2f'|format(row.revenue|float) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  fetch("{{ url_for('api_monthly_revenue') }}").then(r => r.json()).then(({ labels, values }) => {
+    const ctx = document.getElementById('revChart');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Revenue',
+          data: values
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}
